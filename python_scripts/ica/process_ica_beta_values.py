@@ -9,12 +9,13 @@ from GNBTrainer import GNBTrainer
 from LRTrainer import LRTrainer
 from RFTrainer import RFTrainer
 from SVMTrainer import SVMTrainer
-from XGBoostTrainer import XGBoostTrainer
-from LGBMTrainer import LGBMTrainer
-from CatBoostTrainer import CatBoostTrainer
-from CNNTrainer import CNNTrainer
+# from XGBoostTrainer import XGBoostTrainer
+# from LGBMTrainer import LGBMTrainer
+# from CatBoostTrainer import CatBoostTrainer
+# from CNNTrainer import CNNTrainer
 
-SUBJECT_NOS = ["01", "02", "03", "04", "05", "06", "16", "21"]
+#SUBJECT_NOS = ["01", "02", "03", "04", "05", "06", "16", "21"]
+SUBJECT_NOS = ["01", "02", "03"]
 NO_OF_COMPONENTS = 100
 
 result_sheet = {"Classifier":[],
@@ -24,7 +25,7 @@ for turn, SUBJECT_NO in enumerate(SUBJECT_NOS):
     subject_name = f"sub-{SUBJECT_NO}"
     result_sheet[subject_name] = []
     tsv_folder_path = f"F:\\ds003507\\ds003507_required_filtered_files\\sub-{SUBJECT_NO}\\"
-    regressor_mat_file_path = f"F:\\ds003507\\sub-{SUBJECT_NO}\\GICA_{NO_OF_COMPONENTS}\\infomax_regular_temporal_regression.mat"
+    regressor_mat_file_path = f"F:\\ds003507\\sub-{SUBJECT_NO}\\GICA_AFNI_{NO_OF_COMPONENTS}\\infomax_regular_temporal_regression.mat"
 
     file = h5py.File(regressor_mat_file_path, 'r')
     regressionParameters = file['regressInfo']['regressionParameters'][:]
@@ -54,7 +55,7 @@ for turn, SUBJECT_NO in enumerate(SUBJECT_NOS):
         if index<24:
             X.append(data_points)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     scaler = StandardScaler()  # Or MinMaxScaler()
     X_train_scaled = scaler.fit_transform(X_train)
@@ -81,21 +82,21 @@ for turn, SUBJECT_NO in enumerate(SUBJECT_NOS):
     lr_results = lr_model.train_model()
     results_dictionary["LR Classifier"] = lr_results
 
-    xgb_model = XGBoostTrainer(X_train_scaled, X_test_scaled, y_train, y_test)
-    xgb_results = xgb_model.train_model()
-    results_dictionary["XGBoost Classifier"] = xgb_results
-
-    lgbm_model = LGBMTrainer(X_train_scaled, X_test_scaled, y_train, y_test)
-    lgbm_results = lgbm_model.train_model()
-    results_dictionary["LGBM Classifier"] = lgbm_results
-
-    catboost_model = CatBoostTrainer(X_train_scaled, X_test_scaled, y_train, y_test)
-    catboost_results = catboost_model.train_model()
-    results_dictionary["Catboost Classifier"] = catboost_results
-
-    cnn_model = CNNTrainer(X_train_scaled, X_test_scaled, y_train, y_test)
-    cnn_results = cnn_model.train_model()
-    results_dictionary["CNN Classifier"] = cnn_results
+    # xgb_model = XGBoostTrainer(X_train_scaled, X_test_scaled, y_train, y_test)
+    # xgb_results = xgb_model.train_model()
+    # results_dictionary["XGBoost Classifier"] = xgb_results
+    #
+    # lgbm_model = LGBMTrainer(X_train_scaled, X_test_scaled, y_train, y_test)
+    # lgbm_results = lgbm_model.train_model()
+    # results_dictionary["LGBM Classifier"] = lgbm_results
+    #
+    # catboost_model = CatBoostTrainer(X_train_scaled, X_test_scaled, y_train, y_test)
+    # catboost_results = catboost_model.train_model()
+    # results_dictionary["Catboost Classifier"] = catboost_results
+    #
+    # cnn_model = CNNTrainer(X_train_scaled, X_test_scaled, y_train, y_test)
+    # cnn_results = cnn_model.train_model()
+    # results_dictionary["CNN Classifier"] = cnn_results
 
     for classifier, metrics in results_dictionary.items():
         for metric, value in metrics.items():

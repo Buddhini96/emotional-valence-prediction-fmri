@@ -17,12 +17,11 @@ clear all
 close all
 
 %% Setup
-root_folder = 'F:\GroupICATv4.0c_standalone_Win64\ds003507_tsv_files\ds003507_required_filtered_files\';
+root_folder = 'F:\ds003507\ds003507_tsv_files';
 
-% subj_folders = dir([root_folder '/sub*'])
-subj_folders = dir([root_folder '/sub-21'])
+subj_folders = dir([root_folder '/sub*'])
 
-outdir = 'F:\ds003507\derivatives\condition_matfiles2\sub-21\';
+outdir = 'F:\ds003507\ds003507_tsv_files\condition_mat_files';
 
 %% Create condition matfiles for each run of each subject
 for iSubject = 1:numel(subj_folders)
@@ -32,8 +31,6 @@ for iSubject = 1:numel(subj_folders)
     curr_subject_name = curr_subject.name;
 
     curr_subj_folder = [curr_subject.folder '/' curr_subject.name];
-
-%     curr_func_folder = [curr_subj_folder '/func'];
 
     event_files = dir([curr_subj_folder '/*events.tsv']);
 
@@ -53,7 +50,7 @@ for iSubject = 1:numel(subj_folders)
         opts.Delimiter = "\t";
         
         % Specify column names and types
-        opts.VariableNames = ["onset", "duration", "parametricLoss", "distanceFromIndifference", "parametricGain", "gain", "loss", "PTval", "respnum", "respcat", "response_time"];
+        opts.VariableNames = ["onset", "duration", "trial_type", "distanceFromIndifference", "parametricGain", "gain", "loss", "PTval", "respnum", "respcat", "response_time"];
         opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double"];
         
         % Specify file level properties
@@ -69,23 +66,24 @@ for iSubject = 1:numel(subj_folders)
         %%
         %conds = {'FAMOUS'; 'UNFAMILIAR'; 'SCRAMBLED'} % hard coded conditions: may be best/easiest option, especially if you want a specific order of condition regressors
         %conds = unique(events.trial_type); % automatically determine experimental conditions
-        conds = size(events, 1);
+        %conds = size(events, 1);
+        conds = {1;2;3;4;5};
 
         names = {};
         onsets = {};
         durations = {};
     
-        for iCond = 1:conds
+        for iCond = 1:numel(conds)
             
-            %curr_cond = conds{iCond};
+            curr_cond = conds{iCond};
 
-            %idx_curr_cond = find(events.trial_type == curr_cond);
+            idx_curr_cond = find(events.trial_type == curr_cond);
 
-            curr_onsets = events.onset(iCond);
+            curr_onsets = events.onset(idx_curr_cond);
 
-            curr_durations = events.duration(iCond);
+            curr_durations = events.duration(idx_curr_cond);
             
-            names(iCond) = {iCond}
+            names(iCond) = {curr_cond}
             onsets(iCond) = {curr_onsets}
             durations(iCond) = {curr_durations}
         end

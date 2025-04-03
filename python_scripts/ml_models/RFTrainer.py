@@ -1,5 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier
-from results_generator import generate_results
+from python_scripts.utils.results_generator import calculate_accuracy
+
 
 class RFTrainer:
     
@@ -10,5 +11,6 @@ class RFTrainer:
     def train_model(self):
         self.model.fit(self.X_train, self.Y_train)
         y_pred = self.model.predict(self.X_test)
-        results = generate_results(self.Y_test, y_pred)
-        return results
+        return calculate_accuracy(self.Y_test, y_pred)
+        # results = generate_results(self.Y_test, y_pred)
+        # return results
