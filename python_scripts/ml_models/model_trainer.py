@@ -81,7 +81,8 @@ def get_correlated_voxel_indices(X, stimulus_occurance_matrix):
         corr_coefficient = []
         avg_corr_coefficient = 0
         for stimulus_id, onset_ids in stimulus_occurance_matrix.items():
-            beta_values = [X[onset_ids[0]][i], X[onset_ids[1]][i], X[onset_ids[2]][i], X[onset_ids[3]][i]]
+            #beta_values = [X[onset_ids[0]][i], X[onset_ids[1]][i], X[onset_ids[2]][i], X[onset_ids[3]][i]]
+            beta_values = [X[onset_id][i] for onset_id in onset_ids]
             avg_pearson_coefficient = calculate_average_correlation(beta_values)
             if not np.isnan(avg_pearson_coefficient):
                 corr_coefficient.append(avg_pearson_coefficient)
