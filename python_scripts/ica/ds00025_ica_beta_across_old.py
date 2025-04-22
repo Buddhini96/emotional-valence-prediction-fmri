@@ -7,7 +7,7 @@ from python_scripts.ml_models.model_trainer import get_test_set_accuracy, scale_
 from python_scripts.utils.file_processor import read_ds00025_event_file
 
 SUBJECTS = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]
-NO_OF_COMPONENTS = [25]
+NO_OF_COMPONENTS = [25, 50]
 ML_MODELS = ["SVM", "GNB", "RF", "LR"]
 CV_FOLDS = 5
 NO_OF_TRIALS = 64
@@ -20,7 +20,7 @@ Y = [read_ds00025_event_file(split_runs=False) for _ in range(len(SUBJECTS)) ]
 
 for no_of_component in NO_OF_COMPONENTS:
 
-    regressor_mat_file_path = f"E:\\ds000205\\group_analysis\\infomax_regular_temporal_regression.mat"
+    regressor_mat_file_path = f"E:\\ds000205\\GroupAnalysis\\GICA_{no_of_component}\\infomax_regular_temporal_regression.mat"
     file = h5py.File(regressor_mat_file_path, 'r')
     regressionParameters = file['regressInfo']['regressionParameters'][:]
     sub_xx_data = regressionParameters.T

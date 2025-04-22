@@ -18,7 +18,8 @@ def extract_time_confounds(no_of_subjects, no_of_runs, base_path):
 
     for subject in subjects:
         for run in range(1, no_of_runs+1):
-            tsv_file = f"{base_path}\\sub-{subject}\\sub-{subject}_task-view_run-{str(run).zfill(2)}_desc-confounds_timeseries.tsv"
+            #tsv_file = f"{base_path}\\sub-{subject}\\sub-{subject}_task-view_run-{str(run).zfill(2)}_desc-confounds_timeseries.tsv"
+            tsv_file = f"{base_path}\\sub-{subject}\\sub-{subject}_task-affect_run-{run}_desc-confounds_timeseries.tsv"
             df = pd.read_csv(tsv_file, sep='\t')
             df = df[["trans_x", "trans_y", "trans_z", "rot_x", "rot_y", "rot_z"]]
             with open(f'{base_path}\\sub-{subject}\\regressors_run{run}_output.txt', 'w') as f:
@@ -56,6 +57,19 @@ def read_ds003507_event_file(subject_name, split_runs=False):
             Y.extend(y)
     return Y
 
+def read_ds003507_required_event_file(subject_name, split_runs=False):
+    tsv_folder_path = f"F:\\ds003507\\ds003507_required_filtered_files\\{subject_name}\\"
+    Y = []
+    for filename in os.listdir(tsv_folder_path):
+        file_path = os.path.join(tsv_folder_path, filename)
+        data = np.loadtxt(file_path, delimiter='\t', dtype=str, skiprows=1)
+        numeric_column = data[:, 2]
+        y = [int(x) for x in list(numeric_column)]
+        if split_runs:
+            Y.append(y)
+        else:
+            Y.extend(y)
+    return Y
 
 def get_ds_00025_stimulus_occurance_matrix():
     stimulus_id_onset = defaultdict(list)
@@ -67,3 +81,5 @@ def get_ds_00025_stimulus_occurance_matrix():
             stimulus_id_onset[row["StimulusID"]].append(i)
     return stimulus_id_onset
 
+for subject in range(1,22):
+    extract_time_confounds(subject, 3, "F:\\ds003507\\ds003507")

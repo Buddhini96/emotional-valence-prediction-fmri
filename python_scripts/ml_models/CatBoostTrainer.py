@@ -1,5 +1,5 @@
 from catboost import CatBoostClassifier
-from results_generator import generate_results
+from python_scripts.utils.results_generator import calculate_accuracy
 from sklearn.model_selection import RandomizedSearchCV
 from scipy.stats import loguniform, randint
 
@@ -18,4 +18,4 @@ class CatBoostTrainer:
         random_search = RandomizedSearchCV(self.model, param_distributions, n_iter=50, cv=5, n_jobs=-1, random_state=42)
         random_search.fit(self.X_train, self.Y_train)
         y_pred = random_search.predict(self.X_test)
-        return generate_results(self.Y_test, y_pred)
+        return calculate_accuracy(self.Y_test, y_pred)

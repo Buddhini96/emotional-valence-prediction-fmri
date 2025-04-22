@@ -9,6 +9,7 @@ from python_scripts.ml_models.LRTrainer import LRTrainer
 from python_scripts.ml_models.RFTrainer import RFTrainer
 from python_scripts.ml_models.SVMTrainer import SVMTrainer
 import logging
+import random
 
 # Configure logging
 logging.basicConfig(filename='output.log', level=logging.INFO,
@@ -74,6 +75,9 @@ def get_test_set_accuracy(X, Y, model_name, cv_folds, no_of_voxels):
 
     return {"accuracy": mean_accuracy}
 
+def get_test_set_accuracy_across(X_train, X_test, y_train, y_test, model_name):
+    accuracy = train_model(model_name, X_train, X_test, y_train, y_test)
+    return {"accuracy": accuracy}
 
 def get_correlated_voxel_indices(X, stimulus_occurance_matrix):
     required_indices = []
@@ -81,25 +85,30 @@ def get_correlated_voxel_indices(X, stimulus_occurance_matrix):
         corr_coefficient = []
         avg_corr_coefficient = 0
         for stimulus_id, onset_ids in stimulus_occurance_matrix.items():
-            #beta_values = [X[onset_ids[0]][i], X[onset_ids[1]][i], X[onset_ids[2]][i], X[onset_ids[3]][i]]
             beta_values = [X[onset_id][i] for onset_id in onset_ids]
             avg_pearson_coefficient = calculate_average_correlation(beta_values)
             if not np.isnan(avg_pearson_coefficient):
                 corr_coefficient.append(avg_pearson_coefficient)
         if len(corr_coefficient) > 0:
             avg_corr_coefficient = sum(corr_coefficient)/len(corr_coefficient)
-        if avg_corr_coefficient > 0.2:
+        if avg_corr_coefficient > 0.3:
             required_indices.append(i)
         logging.info(f"voxel {i} calculated, {corr_coefficient}, {avg_corr_coefficient}")
     return required_indices
 
 def calculate_average_correlation(beta_values):
-    # pearson_corr1 = np.corrcoef([beta_values[0], beta_values[1]], [beta_values[2], beta_values[3]])[0, 1]
-    # pearson_corr2 = np.corrcoef([beta_values[0], beta_values[2]], [beta_values[1], beta_values[3]])[0, 1]
-    # pearson_corr3 = np.corrcoef([beta_values[0], beta_values[3]], [beta_values[1], beta_values[2]])[0, 1]
-    r1, p1 = pearsonr([beta_values[0], beta_values[1]], [beta_values[2], beta_values[3]])
-    r2, p2 = pearsonr([beta_values[0], beta_values[2]], [beta_values[1], beta_values[3]])
-    r3, p3 = pearsonr([beta_values[0], beta_values[3]], [beta_values[1], beta_values[2]])
+    #for ds00025
+    # r1, p1 = pearsonr([beta_values[0], beta_values[1]], [beta_values[2], beta_values[3]])
+    # r2, p2 = pearsonr([beta_values[0], beta_values[2]], [beta_values[1], beta_values[3]])
+    # r3, p3 = pearsonr([beta_values[0], beta_values[3]], [beta_values[1], beta_values[2]])
+
+
+    #for ds003507
+    random.shuffle(beta_values)
+    beta1, beta2, beta3 = beta_values[:12], beta_values[12:24], beta_values[24:]
+    r1, p1 = pearsonr(beta1, beta2)
+    r2, p2 = pearsonr(beta1, beta3)
+    r3, p3 = pearsonr(beta3, beta2)
 
     pearsonrs = []
 
