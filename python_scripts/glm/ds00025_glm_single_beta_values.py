@@ -7,7 +7,7 @@ import pandas as pd
 from python_scripts.ml_models.model_trainer import get_test_set_accuracy, get_correlated_voxel_indices
 from python_scripts.utils.file_processor import read_ds00025_event_file, get_ds_00025_stimulus_occurance_matrix
 
-VOXELS = [100, 400, 800, 1600, 2400, 3200]
+VOXELS = [100, 400, 800, 1600, 2400, 3200, 4800]
 subjects = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"]
 CV_FOLDS = 8
 result_sheet = {"Classifier": [],

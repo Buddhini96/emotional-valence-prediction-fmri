@@ -7,10 +7,10 @@ from python_scripts.ml_models.model_trainer import get_test_set_accuracy, get_co
 from python_scripts.utils.file_processor import read_ds00025_event_file, get_ds_00025_stimulus_occurance_matrix, \
     read_ds003507_event_file
 
-VOXELS = [100, 400, 800, 1600, 2400, 3200]
+VOXELS = [100, 400, 800, 1600, 2400, 3200, 4800]
 subjects = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18",
             "19", "20", "21"]
-CV_FOLDS = 8
+CV_FOLDS = 12
 result_sheet = {"Classifier": [],
                 "Metric": []}
 

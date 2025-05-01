@@ -113,6 +113,8 @@ for turn, subject in enumerate(subjects):
     X = []
     Y = []
     required_indices = get_required_voxels_for_subject(subject)
+    print(f"{subject} --------> {len(required_indices)}")
+
     for i in range(len(subjects)):
         if i != turn:
             X.extend([x[required_indices] for x in X_all[i]])
@@ -125,7 +127,7 @@ for turn, subject in enumerate(subjects):
             result = get_test_set_accuracy_across(X, X_test, Y, Y_all[turn], model)
             for metric, value in result.items():
                 if turn == 0:
-                    result_sheet["Classifier"].append(f"{model}-({len(required_indices)})")
+                    result_sheet["Classifier"].append(f"{model}-({len(X[0])})")
                     result_sheet["Metric"].append(metric)
                 result_sheet[subject_name].append(value)
 
